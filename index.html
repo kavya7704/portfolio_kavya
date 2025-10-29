@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0b0b0f">
+    <title>The Underdog Story — Kavya</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #e6e6e6;
+            background-color: #0b0b0f;
+            background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+            background-size: 6px 6px;
+            line-height: 1.6;
+        }
+        header.hero {
+            position: relative;
+            color: #fff;
+            padding: 120px 24px 80px;
+            text-align: center;
+            background: linear-gradient(180deg, rgba(0,0,0,0.75), rgba(0,0,0,0.6)),
+                        radial-gradient(1200px 400px at 50% -20%, rgba(123, 97, 255, 0.25), transparent 60%),
+                        radial-gradient(800px 300px at 80% 10%, rgba(255, 92, 92, 0.18), transparent 60%),
+                        #111218;
+            overflow: hidden;
+        }
+        .hero::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(600px 200px at 50% 0%, rgba(255,255,255,0.08), transparent 60%);
+            pointer-events: none;
+        }
+        .hero h1 {
+            font-size: 48px;
+            margin: 0 0 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 0 6px 24px rgba(0,0,0,0.45), 0 2px 6px rgba(123,97,255,0.25);
+        }
+        .hero p.tagline {
+            margin: 0 auto 24px;
+            max-width: 680px;
+            font-size: 18px;
+            color: #cfcfe6;
+        }
+        .hero .cta {
+            display: inline-block;
+            padding: 12px 22px;
+            background: #7b61ff;
+            color: #0b0b0f;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            box-shadow: 0 6px 18px rgba(123, 97, 255, 0.35);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .hero .cta:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(123, 97, 255, 0.45); }
+
+        .hero-options { margin-top: 24px; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+        .hero-options a {
+            display: inline-block;
+            padding: 14px 22px;
+            color: #e6e6ff;
+            text-decoration: none;
+            background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+            border: 1px solid rgba(255,255,255,0.14);
+            border-radius: 999px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.08);
+            backdrop-filter: blur(3px);
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+        }
+        .hero-options a:hover { 
+            background: linear-gradient(135deg, rgba(123,97,255,0.35), rgba(0,212,255,0.30)); 
+            color: #ffffff; 
+            transform: translateY(-2px) scale(1.05); 
+            box-shadow: 0 16px 36px rgba(123,97,255,0.35); 
+            border-color: rgba(123,97,255,0.55);
+        }
+
+        .hero.hide { opacity: 0; transform: translateY(-12px); transition: opacity 300ms ease, transform 300ms ease; }
+
+        .skip-link {
+            position: absolute;
+            left: -9999px;
+            top: auto;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+        }
+        .skip-link:focus {
+            left: 16px;
+            top: 16px;
+            width: auto;
+            height: auto;
+            padding: 10px 14px;
+            background: #7b61ff;
+            color: #0b0b0f;
+            border-radius: 6px;
+            z-index: 1000;
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: rgba(12, 12, 18, 0.8);
+            backdrop-filter: blur(6px);
+            text-align: center;
+            padding: 8px 0 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            transform: translateY(-16px);
+            opacity: 0;
+            transition: transform 300ms ease, opacity 300ms ease;
+        }
+        nav.show { transform: translateY(0); opacity: 1; }
+
+        .nav-top { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px; padding: 0 12px; }
+        .nav-title { font-weight: 700; color: #ffffff; }
+        .home-btn { justify-self: start; padding: 8px 12px; background: rgba(255,255,255,0.06); color: #e6e6f6; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; cursor: pointer; }
+        .nav-top .right { justify-self: end; }
+        .nav-menu { display: flex; flex-wrap: wrap; gap: 8px; padding: 8px 12px 0; justify-content: flex-end; }
+        nav a {
+            display: inline-block;
+            padding: 10px 16px;
+            margin: 4px 6px;
+            color: #d9d9f3;
+            text-decoration: none;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 999px;
+            transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+        }
+        nav a:hover { 
+            background: linear-gradient(135deg, rgba(123,97,255,0.28), rgba(0,212,255,0.25)); 
+            color: #fff; 
+            transform: translateY(-2px) scale(1.03); 
+            box-shadow: 0 10px 24px rgba(123,97,255,0.25);
+            border-color: rgba(123,97,255,0.45);
+        }
+
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 16px; }
+
+        .hidden { display: none !important; }
+
+        .scene {
+            position: relative;
+            padding: 36px 24px;
+            margin: 36px 0;
+            background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+            display: none;
+        }
+        .scene.active { display: block; }
+        .scene.visible { opacity: 1; transform: translateY(0); }
+        .scene h2 { margin-top: 0; color: #ffffff; letter-spacing: 1px; }
+        .scene h3 { color: #e8e8ff; margin-top: 20px; }
+        .scene p, .scene li, .scene td, .scene th { color: #dcdcec; }
+
+        .film-reel {
+            height: 22px;
+            background-image:
+                linear-gradient(to right, rgba(255,255,255,0.12) 1px, transparent 1px),
+                radial-gradient(circle at 12px 11px, rgba(255,255,255,0.25) 4px, transparent 5px);
+            background-size: 4px 100%, 48px 22px;
+            background-repeat: repeat-x;
+            background-position: 0 0, 0 0;
+            margin: 24px 0 12px;
+            opacity: 0.7;
+        }
+
+        .spotlight:hover {
+            box-shadow: 0 16px 40px rgba(123,97,255,0.25);
+            border-color: rgba(123,97,255,0.35);
+        }
+
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.08); text-align: left; }
+        th { color: #ffffff; }
+
+        footer {
+            background-color: #0f0f15;
+            color: #9a9ab8;
+            text-align: center;
+            padding: 24px 0;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
+        /* Accessibility helpers */
+        :focus-visible { outline: 2px solid #7b61ff; outline-offset: 2px; }
+
+        @media (max-width: 720px) {
+            .hero { padding: 96px 16px 64px; }
+            .hero h1 { font-size: 34px; }
+            .scene { padding: 28px 16px; margin: 24px 0; }
+            nav a { padding: 8px 12px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+            .scene { opacity: 1 !important; transform: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <header class="hero" role="banner">      
+        <div class="container">
+            <h1>The Underdog Story</h1>
+            <p class="tagline">Every skill has a story. Here’s mine.</p>
+            <div class="hero-options" aria-label="Choose a chapter">
+                <a href="#first">First</a>
+                <a href="#interval">Interval</a>
+                <a href="#climax">Climax</a>
+                <a href="#after-credits">After Credits</a>
+            </div>
+        </div>
+    </header>
+    <nav id="topnav" class="hidden" role="navigation" aria-label="Primary">
+        <div class="nav-top">
+            <button type="button" class="home-btn left" aria-label="Go to home">Home</button>
+            <div class="nav-title">The Underdog Story — Kavya</div>
+            <div class="nav-menu">
+                <a href="#first">First</a>
+                <a href="#interval">Interval</a>
+                <a href="#climax">Climax</a>
+                <a href="#after-credits">After Credits</a>
+            </div>
+        </div>
+    </nav>
+
+    <div id="main" class="container hidden" role="main">
+        <div class="film-reel" aria-hidden="true"></div>
+
+        <section id="first" class="scene spotlight" tabindex="-1">
+            <h2>First</h2>
+            <p>I am Kavya — energetic, enthusiastic, and brave. I was born in Kurnool and brought up in Parigi, a town in Vikarabad district. In my 8th grade, we moved to Hyderabad. I love cinema, and my love language is cinema 🎥. I believe in practice, patience, and sometimes luck. I love to meet new people, explore everything, and learn new things.</p>
+            <h3>Education</h3>
+            <table>
+                <tr>
+                    <th scope="col">Board</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">GPA</th>
+                </tr>
+                <tr>
+                    <td>SSC</td>
+                    <td>MNR</td>
+                    <td>10</td>
+                </tr>
+                <tr>
+                    <td>Inter</td>
+                    <td>Narayana</td>
+                    <td>9.8</td>
+                </tr>
+                <tr>
+                    <td>B.Tech</td>
+                    <td>Sridevi</td>
+                    <td>9.2</td>
+                </tr>
+            </table>
+        </section>
+
+        <div class="film-reel" aria-hidden="true"></div>
+
+        <section id="interval" class="scene spotlight" tabindex="-1">
+            <h2>Interval</h2>
+            <p>Learning new skills wasn’t a straight line. From debugging late nights to balancing academics with personal projects, every obstacle became a rep. I focused on consistency, curiosity, and grit — improving a little every day.</p>
+            <h3>Interests that fueled the journey</h3>
+            <ul>
+                <li>Photography</li>
+                <li>Blogging
+                    <ul>
+                        <li><a href="https://aakutotakavya.blogspot.com/2023/07/micro-plastic.html?m=1">Micro-plastic Blog</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+
+        <div class="film-reel" aria-hidden="true"></div>
+
+        <section id="climax" class="scene spotlight" tabindex="-1">
+            <h2>Climax</h2>
+            <h3>Highlights</h3>
+            <ul>
+                <li>Gold medal of excellence in olympiad</li>
+            </ul>
+            <p>More projects and milestones are in the works — each one pushing the story forward.</p>
+        </section>
+
+        <div class="film-reel" aria-hidden="true"></div>
+
+        <section id="after-credits" class="scene spotlight" tabindex="-1">
+            <h2>After Credits</h2>
+            <h3>Coming Soon</h3>
+            <p>Future goals: keep building, keep learning, and ship meaningful work that blends creativity and technology.</p>
+            <details>
+                <summary>Fun detail</summary>
+                <p>Blood group: O+</p>
+            </details>
+        </section>
+    </div>
+
+    <footer role="contentinfo">
+        <p>Created by Kavya</p>
+    </footer>
+
+    <script>
+         var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ 
+         function selectSection(id){
+             var nav = document.getElementById('topnav');
+             var main = document.getElementById('main');
+             var hero = document.querySelector('header.hero');
+ 
+             // Reveal nav and main on first selection
+            if(nav.classList.contains('hidden')){ nav.classList.remove('hidden'); requestAnimationFrame(function(){ nav.classList.add('show'); }); }
+            if(main.classList.contains('hidden')){ main.classList.remove('hidden'); }
+            if(hero && !hero.classList.contains('hidden')){ hero.classList.add('hide'); setTimeout(function(){ hero.classList.add('hidden'); }, 280); }
+ 
+             // Toggle scenes
+             document.querySelectorAll('.scene').forEach(function(scene){
+                 scene.classList.remove('active');
+                 scene.classList.remove('visible');
+             });
+             // Hide film reel dividers when in section view
+             document.querySelectorAll('.film-reel').forEach(function(div){ div.style.display = 'none'; });
+             var target = document.querySelector(id);
+             if(target){
+                 target.classList.add('active');
+                 if(prefersReduced){
+                     target.classList.add('visible');
+                 } else {
+                     requestAnimationFrame(function(){ target.classList.add('visible'); });
+                 }
+                 // Smooth scroll to the scene
+                 if(!prefersReduced){ target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+             }
+         }
+
+        function goHome(){
+            var nav = document.getElementById('topnav');
+            var main = document.getElementById('main');
+            var hero = document.querySelector('header.hero');
+            // Reset scenes
+            document.querySelectorAll('.scene').forEach(function(scene){ scene.classList.remove('active'); scene.classList.remove('visible'); });
+            // Show hero
+            if(hero){ hero.classList.remove('hidden'); requestAnimationFrame(function(){ hero.classList.remove('hide'); }); }
+            // Hide nav and main
+            nav.classList.remove('show');
+            setTimeout(function(){ nav.classList.add('hidden'); }, 200);
+            main.classList.add('hidden');
+            // Restore dividers
+            document.querySelectorAll('.film-reel').forEach(function(div){ div.style.display = ''; });
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: prefersReduced ? 'auto' : 'smooth' });
+        }
+ 
+         // Hook up nav and CTA
+        document.querySelectorAll('nav a, .cta, .hero-options a').forEach(function(anchor){
+             anchor.addEventListener('click', function(e){
+                 var href = this.getAttribute('href');
+                 if(href && href.startsWith('#')){
+                     e.preventDefault();
+                     selectSection(href);
+                 }
+             });
+         });
+
+        // Home buttons
+        document.addEventListener('click', function(e){
+            if(e.target && e.target.classList && e.target.classList.contains('home-btn')){
+                e.preventDefault();
+                goHome();
+            }
+        });
+    </script>
+</body>
+</html>
